@@ -1,0 +1,10 @@
+This is just a simple command line tool which lets you create and use premade signatures.
+
+It requires that you have a file named signature.txt in your working directory containing the signature.
+
+You can pass it any number of files, including globs, and it will sign each individually.
+
+I have it set to detect certain file types (such as .c, .java, etc) which use comments and prepend the appropriate comment 
+indicator to the beginning of each line. 
+NOTE: This does not, by any means, cover all file types. The ones it covers are 
+simply file types I found useful. I may add more in the future.
