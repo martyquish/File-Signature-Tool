@@ -21,7 +21,7 @@ for file in "$@";do
 		# a // is automatically prepended to each line of the signature before insertion
 		
 		cat $file > tempsigbody.txt
-		sed -e "s/^/\/\/ /g" signature.txt > tempmodsig.txt
+		sed -e "s/^\s\?/\/\/ /g" -e "s/^\s\?\/\/\s\?[~]\s\?//g"   signature.txt > tempmodsig.txt
 		eval cat tempmodsig.txt tempsigbody.txt > "$file"
 		rm tempsigbody.txt tempmodsig.txt
 		
@@ -31,7 +31,7 @@ for file in "$@";do
 		# a ; is automatically prepended to each line of the signature before insertion
 		
 		cat $file > tempsigbody.txt
-		sed -e "s/^/\;/g" signature.txt > tempmodsig.txt
+		sed -e "s/^\s\?/\; /g" -e "s/^\s\?\;\s\?[~]\s\?//g"   signature.txt > tempmodsig.txt
 		eval cat tempmodsig.txt tempsigbody.txt > "$file"
 		rm tempsigbody.txt tempmodsig.txt
 		
@@ -39,9 +39,9 @@ for file in "$@";do
 	    then
 		# If the file is found to fit a format which typically uses '#' to indicate comments,
 		# a # is automatically prepended to each line of the signature before insertion
-		
+	     	sed -e "s/^\s\?/\# /g" -e "s/^\s\?\#\s\?[~]\s\?//g"   signature.txt > tempmodsig.txt
 		cat $file > tempsigbody.txt
-		sed -e "s/^/\# /g" signature.txt > tempmodsig.txt
+
 		eval cat tempmodsig.txt tempsigbody.txt > "$file"
 		rm tempsigbody.txt tempmodsig.txt
 		
