@@ -2,7 +2,10 @@
 *.txt
 
 # Ignore test file
-testfile.*
+testfile*
+
+# Ignore default executable
+a.out
 
 #Ignore emacs temporary files
 *~
