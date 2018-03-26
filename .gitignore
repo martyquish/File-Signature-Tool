@@ -1,0 +1,9 @@
+# Ignore text files
+*.txt
+
+# Ignore test file
+testfile.*
+
+#Ignore emacs temporary files
+*~
+\#*\#
