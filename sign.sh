@@ -9,6 +9,22 @@ LISP_REGEX=".*\.lisp"
 # Matches any supported file type which uses the "# *Comment here* format.
 HASH_REGEX=".*\.sh|.*\.py|.gitignore"
 
+#This function prepends the signature text and comments it appropriately. The first argument should be the regular expression
+function sign(){
+    		cat $1 > tempsigbody.txt
+
+		if [[ $1 =~ $DOUBLESLASH_REGEXP ]]; then
+		    sed -e "s/^/\/\/ /g" signature.txt > tempmodsig.txt
+		elif [[ $1 =~ $LISP_REGEX ]]; then
+		    sed -e "s/^/\;/g" signature.txt > tempmodsig.txt
+		elif [[ $1 =~ $HASH_REGEX ]];then
+		    sed -e "s/^/\# /g" signature.txt > tempmodsig.txt
+		else
+		    
+		     
+		eval cat tempmodsig.txt tempsigbody.txt > "$file"
+		rm tempsigbody.txt tempmodsig.txt
+}
 
 # Perform signature on each argument passed.
 for file in "$@";do
@@ -62,3 +78,4 @@ for file in "$@";do
 	echo "Could not find file: $file"
     fi
 done
+
