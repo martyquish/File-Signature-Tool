@@ -4,6 +4,8 @@ It requires that you have a file named signature.txt in your working directory c
 
 You can pass it any number of files, including globs, and it will sign each individually.
 
+You can also begin a line with a '~' in your signature.txt file to cause the script to insert everything afterwards without commenting it (if in a commentable file type)
+
 I have it set to detect certain file types (such as .c, .java, etc) which use comments and prepend the appropriate comment 
 indicator to the beginning of each line. 
 NOTE: This does not, by any means, cover all file types. The ones it covers are 
