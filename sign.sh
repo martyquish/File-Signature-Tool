@@ -14,62 +14,29 @@ function sign(){
     		cat $1 > tempsigbody.txt
 
 		if [[ $1 =~ $DOUBLESLASH_REGEXP ]]; then
-		    sed -e "s/^/\/\/ /g" signature.txt > tempmodsig.txt
+		    # Add a double-slash (//) to all lines which do not start with a tilde (~)
+		    sed -e "s/^/\/\/ /g" -e "s/^\/\/\s\?[~]\s\?//g" signature.txt > tempmodsig.txt
 		elif [[ $1 =~ $LISP_REGEX ]]; then
-		    sed -e "s/^/\;/g" signature.txt > tempmodsig.txt
+		    # Add a semicolon (;) to all lines which do not start with a tilde (~)
+		    sed -e "s/^/\;/g" -e "s/^\;\s\?[~]\s\?//g"  signature.txt > tempmodsig.txt
 		elif [[ $1 =~ $HASH_REGEX ]];then
-		    sed -e "s/^/\# /g" signature.txt > tempmodsig.txt
+		    # Add a hash symbol (#) to all lines which do not start with a tilde (~)		    
+		    sed -e "s/^/\# /g" -e "s/^\#\s\?[~]\s\?//g" signature.txt > tempmodsig.txt
 		else
-		    
-		     
+		    # Remove leading tilde (~) from all applicable lines and sign without commenting.
+		    sed -e "s/^\s\?[~]\s\?//g" signature.txt > tempmodsig.txt
+		fi
+		
 		eval cat tempmodsig.txt tempsigbody.txt > "$file"
 		rm tempsigbody.txt tempmodsig.txt
+		return
 }
 
 # Perform signature on each argument passed.
-for file in "$@";do
+for file in "$@"; do
     if [ -f $file ]; then
-	if [ -f signature.txt ];
-	then
-	    if [[ $file =~ $DOUBLESLASH_REGEXP ]];
-	    then
-		# If the file is found to fit a format which typically uses '//' to indicate comments,
-		# a // is automatically prepended to each line of the signature before insertion
-		
-		cat $file > tempsigbody.txt
-		sed -e "s/^\s\?/\/\/ /g" -e "s/^\s\?\/\/\s\?[~]\s\?//g" signature.txt > tempmodsig.txt
-		eval cat tempmodsig.txt tempsigbody.txt > "$file"
-		rm tempsigbody.txt tempmodsig.txt
-		
-	    elif [[ $file =~ $LISP_REGEX ]];
-	    then
-		# If the file is found to fit a format which typically uses ';' to indicate comments,
-		# a ; is automatically prepended to each line of the signature before insertion
-		
-		cat $file > tempsigbody.txt
-		sed -e "s/^\s\?/\; /g" -e "s/^\s\?\;\s\?[~]\s\?//g" signature.txt > tempmodsig.txt
-		eval cat tempmodsig.txt tempsigbody.txt > "$file"
-		rm tempsigbody.txt tempmodsig.txt
-		
-	    elif [[ $file =~ $HASH_REGEX ]];
-	    then
-		# If the file is found to fit a format which typically uses '#' to indicate comments,
-		# a # is automatically prepended to each line of the signature before insertion
-		
-	       	sed -e "s/^\s\?/\# /g" -e "s/^\s\?\#\s\?[~]\s\?//g" signature.txt > tempmodsig.txt 
-		cat $file > tempsigbody.txt
-		eval cat tempmodsig.txt tempsigbody.txt > "$file"
-		rm tempsigbody.txt tempmodsig.txt
-		
-	    else
-		# If no outstanding file types are detected, remove leading '~' flags and prepend signature as-is.
-		
-		sed -e "s/^\s\?[~]\s\?//g" signature.txt > tempmodsig.txt
-		cat $file > tempsigbody.txt
-		eval cat tempmodsig.txt tempsigbody.txt > "$file"
-		rm tempsigbody.txt tempmodsig.txt
-		
-	    fi
+	if [ -f signature.txt ]; then
+	   sign $file
 	else
 	    # The user has not created a signature yet.
 	    echo "You have not created a signature yet! Please write a signature in the current directory into a file named 'signature.txt'. "
